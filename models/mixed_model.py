@@ -16,8 +16,8 @@ class MixModel(nn.Module):
         text_feature_dim = config.hidden_size
 
         if vit:
-            self.image_feature_extractor = ViTFT
-            image_feature_dim = 4096 #TODO change this value
+            self.image_feature_extractor = ViTFT()
+            image_feature_dim = self.image_feature_extractor.size * self.image_feature_extractor.size * 3 #TODO make it more general
         else:
             self.image_feature_extractor = VGG16FT(n_classes)
             if vgg_path is not None:
@@ -33,15 +33,11 @@ class MixModel(nn.Module):
         else:
             self.classification = Classification(linear_input_dimension, n_classes)
 
-
-
-
-
     def forward(self, text, text_input_mask, image):
 
         with torch.no_grad():
             text_features, logit = self.bert.forward(text, text_input_mask)
-            image_features, clas = self.vgg(image)
+            image_features, clas = self.image_feature_extractor(image)
 
         mixed_features = torch.cat((torch.flatten(text_features, start_dim=1), torch.flatten(image_features, start_dim=1)), dim=1)
         classification = self.classification(mixed_features)
