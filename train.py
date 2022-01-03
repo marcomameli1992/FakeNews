@@ -34,7 +34,7 @@ def train(epochs, model, criterion, optimizer, train_loader, val_loader, config,
             os.makedirs(os.path.join(savePath, 'visualmodel'), exist_ok=True)
             torch.save(model.vgg.state_dict(), os.path.join(savePath, 'visualmodel', 'vgg.pth'))
             os.makedirs(os.path.join(savePath, 'classificationLayer'), exist_ok=True)
-            torch.save(model.classification.state_dict(), os.path.join(savePath, 'classificationLayer', 'classificationLayer.pth'))
+            torch.save(model.classification.state_dict(), os.path.join(savePath, 'classificationLayer', 'classificationLayer.pt'))
             #model.vgg.save_pretrained(save_directory=os.path.join(savePath, 'visualmodel'))
             config.save_pretrained(save_directory=os.path.join(savePath, 'textmodel'))
             tokenizer.save_pretrained(save_directory=os.path.join(savePath, 'textmodel'))
