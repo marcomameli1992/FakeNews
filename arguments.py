@@ -18,6 +18,7 @@ parser.add_argument(
 			For evaluating/analyzing/server choose between barissayil/bert-sentiment-analysis-sst and paths to the models you have trained previously.'''
 )
 parser.add_argument('--image_model_path', type=str, default=None)
+parser.add_argument('--image_features_extractor', type=str, default="vit")
 parser.add_argument('--classification_model_path', type=str, default=None)
 parser.add_argument('--train_file', type=str)
 parser.add_argument('--val_file', type=str)
