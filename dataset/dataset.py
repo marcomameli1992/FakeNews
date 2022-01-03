@@ -63,7 +63,7 @@ class MyDataset(Dataset):
         #print(imageID)
         image = imread(os.path.join(self.imageFolder, imageID + '.jpg'))
         #image = torch.from_numpy(image)
-        image = resize(image, (216, 216, 3), anti_aliasing=True)
+        image = resize(image, (224, 224, 3), anti_aliasing=True)
         image = torch.from_numpy(image.transpose((2, 0, 1)))
 
         # label data
