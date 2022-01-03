@@ -41,6 +41,7 @@ if __name__ == "__main__":
     trainImageFolder = args.train_image_folder
     valImageFolder = args.val_image_folder
     testImageFolder = args.test_image_folder
+    use_vit = True if args.image_features_extractor == "vit" else False
 
     # Config to neptune
     run['config/model/Text Model'] = bertModelNameOrPath
@@ -60,7 +61,10 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(bertModelNameOrPath)
 
     # Model creation
-    model = MixModel(config)
+    if use_vit:
+        model = MixModel(config, vit=True)
+    else:
+        model = MixModel(config)
 
     # Takes as the input the logits of the positive class and computes the binary cross-entropy
     criterion = nn.BCEWithLogitsLoss()
@@ -89,7 +93,7 @@ if __name__ == "__main__":
                          dataColumnName=textColumnName, dataColumnLabel=labelColumnName, dataColumnImage=imageColumnName, delimiter=',', imageFolder=trainImageFolder)
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         #model.classification.load_state_dict(torch.load(os.path.join(saveDir, 'classificationLayer', 'classificationLayer.pth')))
-        model = MixModel(config, classification_path=os.path.join(saveDir, 'classificationLayer', 'classificationLayer.pth'))
+        model = MixModel(config, classification_path=os.path.join(saveDir, 'classificationLayer', 'classificationLayer.pt'))
         test(model, criterion, val_loader, device, run)
 
     run.stop()
