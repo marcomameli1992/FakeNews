@@ -17,8 +17,13 @@ def train(epochs, model, criterion, optimizer, train_loader, val_loader, config,
         model.train()
         for i, (input_ids, attention_mask, image, labels) in enumerate(tqdm(iterable=train_loader, desc='Training')):
             optimizer.zero_grad()
-            input_ids, attention_mask, image, labels = input_ids.to(device), attention_mask.to(device), image.to(device, dtype=torch.float), labels.to(device)
-            clas = model(text=input_ids, text_input_mask=attention_mask, image=image)
+            input_ids, attention_mask, labels = input_ids.to(device), attention_mask.to(device), labels.to(device)
+
+            img_list = []
+            for i in range(image.shape[0]):
+                img_list.append(image[i, :, :, :])
+
+            clas = model(text=input_ids, text_input_mask=attention_mask, image=img_list)
             loss = criterion(input=clas.squeeze(-1), target=labels.float())
             run['training/batch/loss'].log(loss)
             loss.backward()
