@@ -24,3 +24,13 @@ class BertForSentimentClassification(BertPreTrainedModel):
         # cls_reps = self.dropout(cls_reps)
         logits = self.cls_layer(cls_reps)
         return cls_reps, logits
+
+if __name__ == "__main__":
+    import torch
+    from transformers import AutoConfig, AutoTokenizer
+
+    bertModelNameOrPath = 'bert-base-uncased'
+    config = AutoConfig.from_pretrained(bertModelNameOrPath)
+    feature_extractor = BertForSentimentClassification(config)
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    feature_extractor.to(device)
