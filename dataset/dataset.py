@@ -3,6 +3,7 @@ import os.path
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
+from torchvision import transforms
 from skimage.io import imread
 from skimage.transform import resize
 # For the dimension warning to deactivate it
@@ -33,6 +34,7 @@ class MyDataset(Dataset):
         self.columnLabel = dataColumnLabel
         self.columnImage = dataColumnImage
         self.imageFolder = imageFolder
+        self.transform = transforms.ToTensor()
 
 
     def __len__(self):
@@ -61,10 +63,11 @@ class MyDataset(Dataset):
 
         # Image data
         #print(imageID)
-        image = imread(os.path.join(self.imageFolder, imageID + '.jpg'))
+        image = imread(os.path.join(self.imageFolder, imageID + '.jpg'))#PIL.Image.open(os.path.join(self.imageFolder, imageID + '.jpg'))#imread(os.path.join(self.imageFolder, imageID + '.jpg'))
         #image = torch.from_numpy(image)
-        image = resize(image, (224, 224, 3), anti_aliasing=True)
-        image = torch.from_numpy(image.transpose((2, 0, 1)))
+        image = resize(image, (224, 224, 3), anti_aliasing=True)#image.resize((224,224))#resize(image, (224, 224, 3), anti_aliasing=True)
+        image = image.transpose((2, 0, 1))
+        #image = self.transform(image)#torch.from_numpy(image.transpose((2, 0, 1)))
 
         # label data
         base_label = [0, 0]
