@@ -15,9 +15,11 @@ class MixModel(nn.Module):
 
         text_feature_dim = config.hidden_size
 
+        self.use_vit = vit
+
         if vit:
             self.image_feature_extractor = ViTFT()
-            image_feature_dim = self.image_feature_extractor.size * self.image_feature_extractor.size * 3 #TODO make it more general
+            image_feature_dim = self.image_feature_extractor.vit.size * self.image_feature_extractor.vit.size * 3 #TODO make it more general
         else:
             self.image_feature_extractor = VGG16FT(n_classes)
             if vgg_path is not None:
@@ -34,11 +36,23 @@ class MixModel(nn.Module):
             self.classification = Classification(linear_input_dimension, n_classes)
 
     def forward(self, text, text_input_mask, image):
-
         with torch.no_grad():
             text_features, logit = self.bert.forward(text, text_input_mask)
-            image_features, clas = self.image_feature_extractor(image)
+            if self.use_vit:
+                image_features = self.image_feature_extractor(image)
+            else:
+                image_features, cls = self.image_feature_extractor(image)
 
         mixed_features = torch.cat((torch.flatten(text_features, start_dim=1), torch.flatten(image_features, start_dim=1)), dim=1)
         classification = self.classification(mixed_features)
         return classification
+
+if __name__ == "__main__":
+    import torch
+    from transformers import AutoConfig
+
+    bertModelNameOrPath = 'bert-base-uncased'
+    config = AutoConfig.from_pretrained(bertModelNameOrPath)
+    feature_extractor = MixModel(config, vit=True)
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    feature_extractor.to(device)
