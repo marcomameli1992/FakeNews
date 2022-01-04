@@ -21,7 +21,7 @@ def train(epochs, model, criterion, optimizer, train_loader, val_loader, config,
 
             img_list = []
             for i in range(image.shape[0]):
-                img_list.append(image[i, :, :, :])
+                img_list.append(image[i, :, :, :].to(device))
 
             clas = model(text=input_ids, text_input_mask=attention_mask, image=img_list)
             loss = criterion(input=clas.squeeze(-1), target=labels.float())
