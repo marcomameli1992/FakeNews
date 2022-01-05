@@ -17,13 +17,8 @@ def train(epochs, model, criterion, optimizer, train_loader, val_loader, config,
         model.train()
         for i, (input_ids, attention_mask, image, labels) in enumerate(tqdm(iterable=train_loader, desc='Training')):
             optimizer.zero_grad()
-            input_ids, attention_mask, labels = input_ids.to(device), attention_mask.to(device), labels.to(device)
-
-            img_list = []
-            for i in range(image.shape[0]):
-                img_list.append(image[i, :, :, :].to(device))
-
-            clas = model(text=input_ids, text_input_mask=attention_mask, image=img_list)
+            input_ids, attention_mask, image, labels = input_ids.to(device), attention_mask.to(device), image.type(torch.float).to(device, dtype=torch.float), labels.to(device)
+            clas = model(text=input_ids, text_input_mask=attention_mask, image=image)
             loss = criterion(input=clas.squeeze(-1), target=labels.float())
             run['training/batch/loss'].log(loss)
             loss.backward()
@@ -37,7 +32,7 @@ def train(epochs, model, criterion, optimizer, train_loader, val_loader, config,
             best_acc = val_acc
             model.bert.save_pretrained(save_directory=os.path.join(savePath, 'textmodel'))
             os.makedirs(os.path.join(savePath, 'visualmodel'), exist_ok=True)
-            torch.save(model.vgg.state_dict(), os.path.join(savePath, 'visualmodel', 'vgg.pth'))
+            torch.save(model.image_feature_extractor.state_dict(), os.path.join(savePath, 'visualmodel', 'image_feature_extractor.pt'))
             os.makedirs(os.path.join(savePath, 'classificationLayer'), exist_ok=True)
             torch.save(model.classification.state_dict(), os.path.join(savePath, 'classificationLayer', 'classificationLayer.pt'))
             #model.vgg.save_pretrained(save_directory=os.path.join(savePath, 'visualmodel'))
