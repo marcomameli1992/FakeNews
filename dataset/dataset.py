@@ -67,7 +67,7 @@ class MyDataset(Dataset):
         #image = torch.from_numpy(image)
         image = resize(image, (224, 224, 3), anti_aliasing=True)#image.resize((224,224))#resize(image, (224, 224, 3), anti_aliasing=True)
         image = image.transpose((2, 0, 1))
-        #image = self.transform(image)#torch.from_numpy(image.transpose((2, 0, 1)))
+        image = self.transform(image)#torch.from_numpy(image.transpose((2, 0, 1)))
 
         # label data
         base_label = [0, 0]

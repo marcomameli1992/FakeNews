@@ -19,7 +19,8 @@ class MixModel(nn.Module):
 
         if vit:
             self.image_feature_extractor = ViTFT()
-            image_feature_dim = self.image_feature_extractor.vit.size * self.image_feature_extractor.vit.size * 3 #TODO make it more general
+            #image_feature_dim = self.image_feature_extractor.vit.size * self.image_feature_extractor.vit.size * 3 #TODO make it more general
+            image_feature_dim = self.image_feature_extractor.vit.num_features
         else:
             self.image_feature_extractor = VGG16FT(n_classes)
             if vgg_path is not None:
