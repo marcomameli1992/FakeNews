@@ -126,3 +126,7 @@ dmypy.json
 .idea/
 
 .neptune/async/09137b2d-2b88-4905-b68c-5e9469f7f136/exec-0-2022-01-03_13.58.36.901306/
+
+.neptune/async/e026a9b0-b10c-4fe6-a84b-0f85e923fcde/exec-0-2022-01-03_15.46.37.268078/last_ack_version
+
+.neptune/async/e026a9b0-b10c-4fe6-a84b-0f85e923fcde/exec-0-2022-01-03_15.46.37.268078/
