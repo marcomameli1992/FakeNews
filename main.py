@@ -93,7 +93,7 @@ if __name__ == "__main__":
                          dataColumnName=textColumnName, dataColumnLabel=labelColumnName, dataColumnImage=imageColumnName, delimiter=',', imageFolder=trainImageFolder)
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         #model.classification.load_state_dict(torch.load(os.path.join(saveDir, 'classificationLayer', 'classificationLayer.pth')))
-        model = MixModel(config, classification_path=os.path.join(saveDir, 'classificationLayer', 'classificationLayer.pt'))
+        model = MixModel(config, classification_path=os.path.join(saveDir, 'classificationLayer', 'classificationLayer.pt'), vit=True)
         test(model, criterion, val_loader, device, run)
 
     run.stop()
